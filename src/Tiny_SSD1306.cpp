@@ -191,7 +191,7 @@ void Tiny_SSD1306::display(void) {
 		x = SSD1306_DISPLAY_WIDTH;
 		while (x--) {
 			ptr = x / 2 + y / 2 * DISPLAY_WIDTH;
-			spi_write(DOUBLE_BITS(y & 1 ? *ptr : *ptr >> 4);
+			spi_write(DOUBLE_BITS(y & 1 ? *ptr : *ptr >> 4));
 		}
 	}
 

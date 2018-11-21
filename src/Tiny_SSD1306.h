@@ -1,5 +1,5 @@
-#ifndef _ATTiny84_SSD1306_H_
-#define _ATTiny84_SSD1306_H_
+#ifndef _Tiny_SSD1306_H_
+#define _Tiny_SSD1306_H_
 
 
 typedef volatile uint8_t  PortReg;
@@ -89,3 +89,5 @@ private:
 	void		send_command(uint8_t c);
 	void		send_command_list(const uint8_t *c, uint8_t n);
 };
+
+#endif //_Tiny_SSD1306_H_

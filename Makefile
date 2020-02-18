@@ -3,8 +3,9 @@ F_CPU   = 8000000
 #FUSE_L  = 0xE1
 #FUSE_H  = 0xDD
 
-DUDEFLAGS = -c avrisp2 -P usb -p atmega328 -v
-CFLAGS  = -Wall -Os -mmcu=atmega328 -DF_CPU=$(F_CPU) -DDEBUG_LEVEL=0 
+MCU = atmega328
+DUDEFLAGS = -c avrisp2 -P usb -p $(MCU) -v
+CFLAGS  = -Wall -Os -mmcu=$(MCU) -DF_CPU=$(F_CPU) -DDEBUG_LEVEL=0 
 OBJECTS = bin/main.o bin/i2c_master.o
 
 
@@ -23,7 +24,7 @@ clean:
 	rm $(OBJECTS) bin/main.elf
 
 program:
-	avrdude -c avrisp2 -p attiny45 -P usb -U flash:w:bin/main.hex
+	avrdude $(DUDEFLAGS) -U flash:w:bin/main.hex
 
 erase:
-	avrdude -c avrisp2 -p attiny45 -P usb -e
+	avrdude $(DUDEFLAGS) -e

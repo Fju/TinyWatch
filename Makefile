@@ -16,11 +16,11 @@ compile:
 	avr-gcc $(CFLAGS) -c i2c_master.c -o bin/i2c_master.o
 	avr-gcc $(CFLAGS) -c main.c -o bin/main.o
 	avr-gcc $(CFLAGS) $(OBJECTS) -o bin/main.elf
-	avr-objcopy -O ihex bin/main.elf main.hex
+	avr-objcopy -O ihex bin/main.elf bin/main.hex
 	make clean
 
 clean:
-	rm bin/*
+	rm $(OBJECTS) bin/main.elf
 
 program:
 	avrdude -c avrisp2 -p attiny45 -P usb -U flash:w:bin/main.hex

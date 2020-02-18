@@ -1,3 +1,3 @@
-# AVR watch
+# AVRist-watch
 
-A DIY Smartwatch with an 128x64 OLED screen.
+A DIY project that involves an ATmega168 that controlls a small monochrome OLED display powered by a chargable LiPo battery - or in short: a digital wrist watch.

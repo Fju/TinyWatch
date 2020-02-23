@@ -1,9 +1,17 @@
 #include <avr/io.h>
+#include "screen.h"
 #include "i2c_master.h"
 
-#define DISPLAY_ADDR 0x22
-#define CLOCK_ADDR 0x21
+#include <util/delay.h>
 
 int main() {
-	while(1);	
+	i2c_set_clock(true);
+
+	if (screen_begin()) while(1);
+
+	while(1) {
+
+		_delay_ms(200);
+		screen_display();
+	}
 }

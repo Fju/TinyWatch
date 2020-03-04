@@ -4,10 +4,14 @@
 #include "i2c_master.h"
 
 void i2c_init() {
-	i2c_set_clock(false);
+	i2c_set_clock(1);
+	
+	// reset two-wire interface after waking up out of a sleep mode
+	TWCR &= ~((1 << TWSTO) | (1 << TWEN));
+	TWCR |= 1 << TWEN;
 }
 
-void i2c_set_clock(bool fast) {
+void i2c_set_clock(uint8_t fast) {
 	// set TWI clock (either fast mode or normal mode)
 	// f_scl = f_cpu / (16 + 2 * tw_bit_rate * 4 ^ tw_prescaler)
 	if (fast) {

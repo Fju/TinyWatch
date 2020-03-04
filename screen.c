@@ -59,7 +59,7 @@ void screen_display() {
 			i2c_write(0x40);
 			bytesOut = 1;
 		}
-		i2c_write(0x69);
+		i2c_write(*ptr++);
 		++bytesOut;
 	}
 	i2c_stop();

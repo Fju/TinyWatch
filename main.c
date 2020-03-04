@@ -5,7 +5,7 @@
 #include <util/delay.h>
 
 int main() {
-	i2c_set_clock(true);
+	i2c_init();
 
 	if (screen_begin()) while(1);
 

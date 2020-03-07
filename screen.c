@@ -45,7 +45,7 @@ void screen_display() {
 	screen_command_list(dlist1, sizeof(dlist1));
 	screen_command(SCREEN_WIDTH - 1);
 
-	uint16_t count = 1024;//BUFFER_SIZE;
+	uint16_t count = BUFFER_SIZE;
 	uint8_t *ptr = buffer;
 
 
@@ -69,6 +69,10 @@ void screen_clear() {
 	memset(buffer, 0, BUFFER_SIZE);
 }
 
+void screen_off() {
+	screen_command(SCREEN_DISPLAYOFF);
+}
+
 uint8_t screen_begin() {
 	if (!buffer) {
 		// allocate memory
@@ -79,8 +83,10 @@ uint8_t screen_begin() {
 
 	// clear buffer
 	screen_clear();
+	return 0;
+}
 
-
+void screen_on() {
 	static const uint8_t PROGMEM init1[] = {
 		SCREEN_DISPLAYOFF,									 // 0xAE
 		SCREEN_SETDISPLAYCLOCKDIV,					 // 0xD5
@@ -122,8 +128,6 @@ uint8_t screen_begin() {
 		SCREEN_DISPLAYON
 	};								 // Main screen turn on
 	screen_command_list(init5, sizeof(init5));
-
-	return 0;
 }
 
 inline void screen_set_pixel(uint8_t x, uint8_t y, bool color) {
@@ -225,6 +229,22 @@ void screen_draw_inupiaq(uint8_t num, uint8_t offset_x, uint8_t offset_y, bool l
 		y1 = pgm_read_byte(lower_lines + (i * 4 + 3) + memoffset) >> (large ? 0 : 1);
 		
 		screen_draw_line(offset_x + x0, offset_y + y0, offset_x + x1, offset_y + y1);
+	}
+}
+
+
+void screen_draw_decimal(uint8_t num, uint8_t offset_x, uint8_t offset_y) {
+	uint8_t bitmap_offset = num * 91;
+	
+	
+	for (uint8_t i = 0; i < 22*33; ++i) {
+		uint8_t x = offset_x + (i % 22);
+		uint8_t y = offset_y + (i / 22);
+		
+		uint8_t data = pgm_read_byte(number_bitmap + bitmap_offset + (i / 8));
+	
+		if (data & (1 << i % 8)) screen_set_pixel(x, y, true);
+		else screen_set_pixel(x, y, false);
 	}
 }
 

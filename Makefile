@@ -28,12 +28,12 @@ FUSE_H = 0xDF
 FUSE_E = 0xFF
 
 
-MCU = atmega168pb
+MCU = atmega328p
 F_CPU = 8000000
 
 DUDEFLAGS = -c avrisp2 -P usb -p $(MCU) -v
 CFLAGS = -Wall -Os -mmcu=$(MCU) -DF_CPU=$(F_CPU) -DDEBUG_LEVEL=0 
-OBJECTS = bin/main.o bin/i2c_master.o bin/screen.o
+OBJECTS = bin/main.o bin/i2c_master.o bin/screen.o bin/clock.o
 
 
 help:
@@ -47,6 +47,7 @@ fuses:
 
 compile:
 	avr-gcc $(CFLAGS) -c i2c_master.c -o bin/i2c_master.o
+	avr-gcc $(CFLAGS) -c clock.c -o bin/clock.o
 	avr-gcc $(CFLAGS) -c screen.c -o bin/screen.o
 	avr-gcc $(CFLAGS) -c main.c -o bin/main.o
 	avr-gcc $(CFLAGS) $(OBJECTS) -o bin/main.elf

@@ -35,6 +35,22 @@ uint8_t get_hours() {
 	return hours;
 }
 
+void set_hours(uint8_t hours) {
+	uint8_t data = 0;
+	if (hours > 12) {
+		hours -= 12;
+		data = ((hours % 10) & 0x0F) | 0x60;
+	} else {
+		data = ((hours % 10) & 0x0F) | 0x40;
+	}
+
+	if (hours >= 10) data |= 0x10;
+
+	
+
+	i2c_writeReg(CLOCK_ADDR, CLOCK_HOURS_REG, &data, 1);
+}
+
 uint8_t get_minutes() {
 	// read from minutes register (address = 0x01)
 	// bits: [ MSB ][ 6 ][ 5 ][ 4 ][ 3 ][ 2 ][ 1 ][ LSB ]
@@ -44,6 +60,16 @@ uint8_t get_minutes() {
 
 	uint8_t minutes = data & 0x0F;
 	minutes += ((data & 0x70) >> 4) * 10;
+
+	return minutes;
+}
+
+void set_minutes(uint8_t minutes) {
+	uint8_t data = 0;
+	
+	data |= (minutes % 10) & 0x0F;
+	data |= (minutes / 10) << 4;
+	i2c_writeReg(CLOCK_ADDR, CLOCK_MINUTES_REG, &data, 1);
 }
 
 uint8_t get_seconds() {
@@ -54,5 +80,16 @@ uint8_t get_seconds() {
 	i2c_readReg(CLOCK_ADDR, CLOCK_SECONDS_REG, &data, 1);
 
 	uint8_t seconds = data & 0x0F;
-	minutes += ((data & 0x70) >> 4) * 10;
+	seconds += ((data & 0x70) >> 4) * 10;
+
+	return seconds;
+}
+
+void set_seconds(uint8_t seconds) {
+	uint8_t data = 0;
+
+	data |= (seconds % 10) & 0x0F;
+	data |= (seconds / 10) << 4;
+
+	i2c_writeReg(CLOCK_ADDR, CLOCK_SECONDS_REG, &data, 1);
 }

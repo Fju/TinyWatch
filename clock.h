@@ -1,3 +1,6 @@
+#ifndef CLOCK_H
+#define CLOCK_H
+
 #include "i2c_master.h"
 
 #define CLOCK_ADDR 0xD0
@@ -9,5 +12,10 @@
 uint32_t get_time();
 
 uint8_t get_hours();
+void set_hours(uint8_t hours);
 uint8_t get_minutes();
+void set_minutes(uint8_t minutes);
 uint8_t get_seconds();
+void set_seconds(uint8_t seconds);
+
+#endif //CLOCK_H

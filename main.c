@@ -32,6 +32,9 @@ int main() {
 	// turn off ADC
 	ACSR = 0x80;
 
+	// disable all components except TWI
+	PRR |= ~(1 << PRTWI);
+
 	// set interrupt enabled
 	sei();
 
@@ -45,6 +48,7 @@ int main() {
 		// draw loop
 		while(i++ < 30) {
 			screen_clear();
+
 			s = get_seconds();
 			m = get_minutes();
 			h = get_hours();
@@ -66,7 +70,6 @@ int main() {
 		// turn off screen
 		screen_off();
 		i = 0;
-
 
 		// enable INT0 and INT1
 		EIMSK |= (1 << INT1) | (1 << INT0);

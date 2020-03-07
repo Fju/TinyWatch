@@ -130,9 +130,14 @@ void screen_on() {
 	screen_command_list(init5, sizeof(init5));
 }
 
-inline void screen_set_pixel(uint8_t x, uint8_t y, bool color) {
-	if (color) buffer[x + (y / 8) * SCREEN_WIDTH] |= 1 << (y & 7);
-	else buffer[x + (y / 8) * SCREEN_WIDTH] &= ~(1 << (y & 7));
+inline void screen_set_pixel(uint8_t x, uint8_t y, uint8_t mode) {
+	if (mode) {
+		// set pixel white
+		buffer[x + (y / 8) * SCREEN_WIDTH] |= 1 << (y & 7);
+	} else {
+		// set pixel black
+		buffer[x + (y / 8) * SCREEN_WIDTH] &= ~(1 << (y & 7));
+	}
 }
 
 void screen_draw_line(uint8_t x0, int8_t y0, uint8_t x1, uint8_t y1) {
@@ -144,7 +149,7 @@ void screen_draw_line(uint8_t x0, int8_t y0, uint8_t x1, uint8_t y1) {
 
 	int16_t err = dx + dy;
 	while (1) {		
-		screen_set_pixel(x0, y0, true);
+		screen_set_pixel(x0, y0, 1);
 		if (x0 == x1 && y0 == y1) break;
 
 		int16_t e2 = 2 * err;
@@ -164,14 +169,9 @@ void screen_draw_inupiaq(uint8_t num, uint8_t offset_x, uint8_t offset_y, bool l
 	uint8_t upper = num / 5;
 
 	static const uint8_t PROGMEM upper_lines[] = {
-		// large character
 		0, 14, 24,	9,
 		0,	5, 24,	9,
 		0,	5, 24,	0,
-		// small character
-		/*0,	7, 12,	5,
-		0,	2, 12,	5,
-		0,	2, 12,	0*/
 	};
 
 	static const uint8_t PROGMEM lower_lines[] = {
@@ -214,7 +214,6 @@ void screen_draw_inupiaq(uint8_t num, uint8_t offset_x, uint8_t offset_y, bool l
 
 	
 	uint8_t memoffset = 2 * lower * (lower - 1);
-	
 	if (lower == 0) {
 		if (upper > 0) return;
 		
@@ -234,17 +233,17 @@ void screen_draw_inupiaq(uint8_t num, uint8_t offset_x, uint8_t offset_y, bool l
 
 
 void screen_draw_decimal(uint8_t num, uint8_t offset_x, uint8_t offset_y) {
-	uint8_t bitmap_offset = num * 91;
-	
-	
-	for (uint8_t i = 0; i < 22*33; ++i) {
-		uint8_t x = offset_x + (i % 22);
-		uint8_t y = offset_y + (i / 22);
-		
-		uint8_t data = pgm_read_byte(number_bitmap + bitmap_offset + (i / 8));
-	
-		if (data & (1 << i % 8)) screen_set_pixel(x, y, true);
-		else screen_set_pixel(x, y, false);
+	uint8_t bitmap_offset = num * 105;
+	uint8_t byte = 0;
+	for (uint8_t y = 0; y < 35; ++y) {
+		for (uint8_t x = 0; x < 24; ++x) {
+			if (x % 8 == 0) {
+				// load new byte
+				byte = pgm_read_byte(decimal_bitmap + bitmap_offset + (x / 8));
+			}
+				
+			screen_set_pixel(offset_x + x, offset_y + y, byte & (1 << (7 - x % 8)));
+		}
 	}
 }
 

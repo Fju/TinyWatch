@@ -46,23 +46,27 @@ int main() {
 		// turn on screen
 		screen_on();
 		// draw loop
-		while(i++ < 30) {
+		while(i++ < 80) {
 			screen_clear();
 
 			s = get_seconds();
 			m = get_minutes();
 			h = get_hours();
 			
-			screen_draw_inupiaq(h / 20, 2, 2, true);
-			screen_draw_inupiaq(h % 20, 30, 2, true);
+			//screen_draw_inupiaq(h / 20, 2, 2, true);
+			//screen_draw_inupiaq(h % 20, 30, 2, true);
 			
-			screen_draw_inupiaq(m / 20, 58, 2, true);
-			screen_draw_inupiaq(m % 20, 86, 2, true);
+			//screen_draw_inupiaq(m / 20, 58, 2, true);
+			//screen_draw_inupiaq(m % 20, 86, 2, true);
 
-			screen_draw_inupiaq(s / 20, 40, 44, false);
-			screen_draw_inupiaq(s % 20, 59, 44, false);
+			//screen_draw_inupiaq(s / 20, 40, 44, false);
+			//screen_draw_inupiaq(s % 20, 59, 44, false);
 
-			//screen_draw_decimal(3, 5, 5);
+			screen_draw_decimal(m / 10, 10, 14);
+			screen_draw_decimal(m % 10, 38, 14);
+
+			screen_draw_decimal(s / 10, 66, 14);
+			screen_draw_decimal(s % 10, 94, 14);
 
 			screen_display();
 			_delay_ms(200);

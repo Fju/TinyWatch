@@ -233,13 +233,13 @@ void screen_draw_inupiaq(uint8_t num, uint8_t offset_x, uint8_t offset_y, bool l
 
 
 void screen_draw_decimal(uint8_t num, uint8_t offset_x, uint8_t offset_y) {
-	uint8_t bitmap_offset = num * 105;
+	uint16_t bitmap_offset = num * 105;
 	uint8_t byte = 0;
 	for (uint8_t y = 0; y < 35; ++y) {
 		for (uint8_t x = 0; x < 24; ++x) {
 			if (x % 8 == 0) {
 				// load new byte
-				byte = pgm_read_byte(decimal_bitmap + bitmap_offset + (x / 8));
+				byte = pgm_read_byte(decimal_bitmap + bitmap_offset + x / 8 + y * 3);
 			}
 				
 			screen_set_pixel(offset_x + x, offset_y + y, byte & (1 << (7 - x % 8)));

@@ -38,6 +38,8 @@ int main() {
 	// set interrupt enabled
 	sei();
 
+	uint8_t display_mode = 0;
+
 	// main loop
 	while(1) {
 		// two-wire interface needs to be resetted
@@ -49,24 +51,33 @@ int main() {
 		while(i++ < 80) {
 			screen_clear();
 
+			if ((PIND & (1 << PD2)) == 0) {
+				display_mode ^= 1;
+			}
+
+
 			s = get_seconds();
 			m = get_minutes();
 			h = get_hours();
 			
-			//screen_draw_inupiaq(h / 20, 2, 2, true);
-			//screen_draw_inupiaq(h % 20, 30, 2, true);
-			
-			//screen_draw_inupiaq(m / 20, 58, 2, true);
-			//screen_draw_inupiaq(m % 20, 86, 2, true);
-
-			//screen_draw_inupiaq(s / 20, 40, 44, false);
-			//screen_draw_inupiaq(s % 20, 59, 44, false);
-
-			screen_draw_decimal(m / 10, 10, 14);
-			screen_draw_decimal(m % 10, 38, 14);
-
-			screen_draw_decimal(s / 10, 66, 14);
-			screen_draw_decimal(s % 10, 94, 14);
+			if (display_mode) {
+				// hours
+				screen_draw_inupiaq(h / 20, 2, 2, true);
+				screen_draw_inupiaq(h % 20, 30, 2, true);
+				// minutes
+				screen_draw_inupiaq(m / 20, 58, 2, true);
+				screen_draw_inupiaq(m % 20, 86, 2, true);
+				// seconds
+				screen_draw_inupiaq(s / 20, 40, 44, false);
+				screen_draw_inupiaq(s % 20, 59, 44, false);
+			} else {
+				// hours
+				screen_draw_decimal(h / 10, 10, 14);
+				screen_draw_decimal(h % 10, 38, 14);
+				// minutes
+				screen_draw_decimal(m / 10, 66, 14);
+				screen_draw_decimal(m % 10, 94, 14);
+			}
 
 			screen_display();
 			_delay_ms(200);

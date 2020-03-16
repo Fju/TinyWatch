@@ -1,3 +1,4 @@
 (sym_lib_table
   (lib (name components)(type Legacy)(uri ${KIPRJMOD}/components.lib)(options "")(descr ""))
+  (lib (name MCP73831T-2ACI_OT)(type Legacy)(uri ${KIPRJMOD}/components/MCP73831T-2ACI_OT.lib)(options "")(descr ""))
 )

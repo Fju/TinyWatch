@@ -1,4 +1,4 @@
-(module TL3340_SMT (layer F.Cu) (tedit 5E70D7D3)
+(module TL3340_SMT (layer F.Cu) (tedit 5E71028C)
   (fp_text reference REF** (at 0 -4) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.15)))
   )
@@ -6,6 +6,7 @@
     (effects (font (size 1 1) (thickness 0.15)))
   )
   (fp_line (start -2.25 0.6) (end 2.25 0.6) (layer F.SilkS) (width 0.12))
+  (fp_line (start -1.6 -3) (end 1.6 -3) (layer F.SilkS) (width 0.12))
   (pad ~ smd rect (at -1.75 0) (size 1.5 0.9) (layers F.Cu F.Paste F.Mask))
   (pad ~ smd rect (at 1.75 0) (size 1.5 0.9) (layers F.Cu F.Paste F.Mask))
   (pad 2 smd rect (at -1.225 -1.95) (size 0.75 1.8) (layers F.Cu F.Paste F.Mask))

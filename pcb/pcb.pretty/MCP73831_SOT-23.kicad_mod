@@ -1,6 +1,6 @@
-(module MCP73831_SOT-23 (layer F.Cu) (tedit 5E6FC22E)
-  (fp_text reference REF** (at -1.5 -1.4 270) (layer F.SilkS)
-    (effects (font (size 0.8 0.8) (thickness 0.15)))
+(module MCP73831_SOT-23 (layer F.Cu) (tedit 5E7105A4)
+  (fp_text reference REF** (at -1.6 -1.4 270) (layer F.SilkS)
+    (effects (font (size 1 1) (thickness 0.15)))
   )
   (fp_text value MCP73831_SOT-23 (at 0 -5.1) (layer F.Fab) hide
     (effects (font (size 1 1) (thickness 0.15)))

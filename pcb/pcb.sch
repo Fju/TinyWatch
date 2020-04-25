@@ -797,25 +797,27 @@ NoConn ~ 3650 1250
 $Comp
 L Connector:Conn_01x02_Male J4
 U 1 1 5E792C70
-P 1700 1450
-F 0 "J4" H 1808 1631 50  0000 C CNN
-F 1 "Conn_01x02_Male" H 1808 1540 50  0000 C CNN
-F 2 "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" H 1700 1450 50  0001 C CNN
-F 3 "~" H 1700 1450 50  0001 C CNN
-	1    1700 1450
+P 1800 1350
+F 0 "J4" H 1908 1531 50  0000 C CNN
+F 1 "Conn_01x02_Male" H 1908 1440 50  0000 C CNN
+F 2 "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical" H 1800 1350 50  0001 C CNN
+F 3 "~" H 1800 1350 50  0001 C CNN
+	1    1800 1350
 	1    0    0    -1  
 $EndComp
-Text GLabel 2050 1550 2    50   Input ~ 0
+Text GLabel 2150 1450 2    50   Input ~ 0
 BAT+
-Text GLabel 2050 1450 2    50   Input ~ 0
+Text GLabel 2150 1350 2    50   Input ~ 0
 BAT-
 Wire Wire Line
-	2050 1450 1900 1450
+	2150 1350 2000 1350
 Wire Wire Line
-	1900 1550 2050 1550
+	2000 1450 2150 1450
 Wire Wire Line
 	6850 3850 7850 3850
 Connection ~ 6850 3850
 Wire Wire Line
 	6850 3850 6850 3950
+Text Notes 850  1600 0    50   ~ 0
+https://www.conrad.de/de/p/b2b-ph-k-s-lf-sn-connector-header-male-pitch2mm-top-entry-2p-th-inhalt-20-stueck-800113239.html
 $EndSCHEMATC

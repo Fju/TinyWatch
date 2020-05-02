@@ -21,3 +21,6 @@ fp-info-cache
 # Exported BOM files
 *.xml
 *.csv
+
+# directory with Gerber and Drill files
+gerber/

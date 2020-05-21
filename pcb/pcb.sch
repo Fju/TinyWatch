@@ -164,9 +164,9 @@ Wire Wire Line
 	2400 5300 2600 5300
 Wire Wire Line
 	2400 5200 2600 5200
-Text GLabel 2650 4200 2    50   Input ~ 0
-MISO
 Text GLabel 2650 4300 2    50   Input ~ 0
+MISO
+Text GLabel 2650 4200 2    50   Input ~ 0
 MOSI
 Text GLabel 2650 4400 2    50   Input ~ 0
 SCK
@@ -337,9 +337,9 @@ F 3 "~" H 4050 6500 50  0001 C CNN
 $EndComp
 Text GLabel 4550 6500 2    50   Input ~ 0
 RESET
-Text GLabel 4550 6600 2    50   Input ~ 0
-MOSI
 Text GLabel 4550 6700 2    50   Input ~ 0
+MOSI
+Text GLabel 4550 6600 2    50   Input ~ 0
 MISO
 Text GLabel 4550 6800 2    50   Input ~ 0
 SCK

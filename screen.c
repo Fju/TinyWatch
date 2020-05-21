@@ -1,4 +1,5 @@
 #include <avr/pgmspace.h>
+#include <util/delay.h>
 
 #include <string.h> // required for `memset`
 #include <stdlib.h> // required for `malloc`
@@ -87,6 +88,15 @@ uint8_t screen_begin() {
 }
 
 void screen_on() {
+	// display reset high
+	PORTD |= 1 << PD0;
+	_delay_ms(1);
+	// display reset low	
+	PORTD &= ~(1 << PD0);
+	_delay_ms(10);
+	// reset back to high
+	PORTD |= 1 << PD0;
+
 	static const uint8_t PROGMEM init1[] = {
 		SCREEN_DISPLAYOFF,									 // 0xAE
 		SCREEN_SETDISPLAYCLOCKDIV,					 // 0xD5

@@ -29,6 +29,9 @@ int main() {
     DDRC |= ~((1 << PC5) | (1 << PC4));
     DDRD |= ~((1 << PD2) | (1 << PD3));
 
+	// active pull-up 
+	PORTD |= (1 << PD2) | (1 << PD3);
+
 	// turn off ADC
 	ACSR = 0x80;
 

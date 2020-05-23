@@ -2,3 +2,4 @@ bin/*
 !bin/main.hex
 fonts/venv
 fonts/preview_*
+parts/*.FCStd?

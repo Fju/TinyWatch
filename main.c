@@ -42,7 +42,6 @@ int main() {
 
 	enum state_t state;
 
-
 	uint8_t btn1_state = 0;
 	uint8_t btn2_state = 0;
 

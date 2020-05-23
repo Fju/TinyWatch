@@ -12,6 +12,12 @@ A DIY project that involves an ATmega328p that controlls a small monochrome OLED
 
 - **Energy Efficiency**: After displaying the current time for a couple of seconds the display turns off and the microcontroller enters a sleep mode. This saves battery power.
 
+## Images
+
+![PCB up close](docs/pcb_close.jpg)
+
+![PCB with OLED display on top](docs/pcb_with_display.jpg)
+
 ## Schematic
 
 ![Schematic](docs/schematic.svg)

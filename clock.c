@@ -92,6 +92,19 @@ void set_seconds(uint8_t seconds) {
 	i2c_writeReg(CLOCK_ADDR, CLOCK_SECONDS_REG, &data, 1);
 }
 
+uint8_t get_date() {
+	// read from date register (address = 0x04)
+	// value range: 01 - 31
+	// bits: [ MSB ][ 6 ][  5 ][ 4 ][ 3 ][ 2 ][ 1 ][ LSB ]
+	//       [  0  ][ 0 ][ 10 date ][        date        ]
+	uint8_t data;
+	i2c_readReg(CLOCK_ADDR, CLOCK_DATE_REG, &data, 1);
+
+	uint8_t date = data & 0x0F;
+	date += ((data & 0x30) >> 4) * 10;
+
+	return date;
+}
 
 void set_date(uint8_t date) {
 	// write to date register (address = 0x04)
@@ -105,6 +118,21 @@ void set_date(uint8_t date) {
 	i2c_writeReg(CLOCK_ADDR, CLOCK_DATE_REG, &data, 1);
 }
 
+uint8_t get_month() {
+	// read from month register (address = 0x05)
+	// value range: 01 - 12
+	// bits: [    MSB    ][ 6 ][ 5 ][     4    ][ 3 ][ 2 ][ 1 ][ LSB ]
+	//       [  century  ][ 0 ][ 0 ][ 10 month ][       month        ]
+	
+	uint8_t data = 0;
+	i2c_readReg(CLOCK_ADDR, CLOCK_MONTH_REG, &data, 1);
+
+	uint8_t month = data & 0x0F;
+	month += ((data & 0x10) >> 4) * 10;
+
+	return month;
+}
+
 void set_month(uint8_t month) {
 	// write to month register (address = 0x05)
 	// bits: [    MSB    ][ 6 ][ 5 ][     4    ][ 3 ][ 2 ][ 1 ][ LSB ]
@@ -113,8 +141,26 @@ void set_month(uint8_t month) {
 
 	data |= (month % 10) & 0x0F;
 	data |= ((month / 10) << 4) & 0x10;
+	// set century to 1
+	data |= 0x80;
 
 	i2c_writeReg(CLOCK_ADDR, CLOCK_MONTH_REG, &data, 1);
+}
+
+
+uint8_t get_year() {
+	// read from year register (address = 0x06)
+	// value range: 00 - 99
+	// bits: [ MSB ][ 6 ][ 5 ][ 4 ][ 3 ][ 2 ][ 1 ][ LSB ]
+	//       [       10 year      ][        year        ]
+	
+	uint8_t data = 0;
+	i2c_readReg(CLOCK_ADDR, CLOCK_YEAR_REG, &data, 1);
+
+	uint8_t year = data & 0x0F;
+	year += ((data & 0xF0) >> 4) * 10;
+
+	return year;
 }
 
 void set_year(uint8_t year) {

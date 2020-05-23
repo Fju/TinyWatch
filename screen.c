@@ -5,6 +5,7 @@
 #include <stdlib.h> // required for `malloc`
 
 #include "screen.h"
+#include "i2c_master.h"
 
 void screen_command(uint8_t cmd) {
 	i2c_start(SCREEN_ADDR);
@@ -150,111 +151,20 @@ inline void screen_set_pixel(uint8_t x, uint8_t y, uint8_t mode) {
 	}
 }
 
-void screen_draw_line(uint8_t x0, int8_t y0, uint8_t x1, uint8_t y1) {
-	 
-	int8_t dx = abs(x1 - x0);
-	int8_t sx = (x0 < x1) ? 1 : -1;
-	int8_t dy = -abs(y1 - y0);
-	int8_t sy = (y0 < y1) ? 1 : -1;
-
-	int16_t err = dx + dy;
-	while (1) {		
-		screen_set_pixel(x0, y0, 1);
-		if (x0 == x1 && y0 == y1) break;
-
-		int16_t e2 = 2 * err;
-		if (e2 >= dy) {
-			err += dy;
-			x0 += sx;	
-		}
-		if (e2 <= dx) {
-			err += dx;
-			y0 += sy;
-		}
-	}
-}
-
-void screen_draw_inupiaq(uint8_t num, uint8_t offset_x, uint8_t offset_y, bool large) {
-	uint8_t lower = num % 5;
-	uint8_t upper = num / 5;
-
-	static const uint8_t PROGMEM upper_lines[] = {
-		0, 14, 24,	9,
-		0,	5, 24,	9,
-		0,	5, 24,	0,
-	};
-
-	static const uint8_t PROGMEM lower_lines[] = {
-		// large character
-		// 1
-		0, 14, 24, 38,
-		// 2
-		0, 14, 12, 38,
-		12, 38, 24, 19,
-		// 3
-		0, 14, 8, 38,
-		8, 38, 16, 19,
-		16, 19, 24, 38,
-		// 4
-		0, 14, 6, 38,
-		6, 38, 12, 19,
-		12, 19, 18, 38,
-		18, 38, 24, 19,
-		// 0
-		2, 28, 12, 38,
-		12, 38, 22, 28,
-		22, 28, 2, 14,
-		2, 28, 22, 14
-	};
-
-	uint8_t x0;
-	uint8_t x1;
-	uint8_t y1;
-	uint8_t y0;
-	uint8_t i;
-
-	for (i = 0; i < upper; ++i) {
-		x0 = pgm_read_byte(upper_lines + (i * 4 + 0)) >> (large ? 0 : 1);
-		y0 = pgm_read_byte(upper_lines + (i * 4 + 1)) >> (large ? 0 : 1);
-		x1 = pgm_read_byte(upper_lines + (i * 4 + 2)) >> (large ? 0 : 1);
-		y1 = pgm_read_byte(upper_lines + (i * 4 + 3)) >> (large ? 0 : 1);
-		
-		screen_draw_line(offset_x + x0, offset_y + y0, offset_x + x1, offset_y + y1);
-	}
-
-	
-	uint8_t memoffset = 2 * lower * (lower - 1);
-	if (lower == 0) {
-		if (upper > 0) return;
-		
-		// hack to display zeros
-		memoffset = 40;
-		lower = 4;
-	}
-	for (i = 0; i < lower; ++i) {
-		x0 = pgm_read_byte(lower_lines + (i * 4 + 0) + memoffset) >> (large ? 0 : 1);
-		y0 = pgm_read_byte(lower_lines + (i * 4 + 1) + memoffset) >> (large ? 0 : 1);
-		x1 = pgm_read_byte(lower_lines + (i * 4 + 2) + memoffset) >> (large ? 0 : 1);
-		y1 = pgm_read_byte(lower_lines + (i * 4 + 3) + memoffset) >> (large ? 0 : 1);
-		
-		screen_draw_line(offset_x + x0, offset_y + y0, offset_x + x1, offset_y + y1);
-	}
-}
-
-
-void screen_draw_decimal(uint8_t num, uint8_t offset_x, uint8_t offset_y) {
-	uint16_t bitmap_offset = num * 105;
+void screen_draw_character(const uint8_t *bitmap, uint8_t num, const uint8_t height, const uint8_t width, uint8_t offset_x, uint8_t offset_y, uint8_t invert) {
 	uint8_t byte = 0;
-	for (uint8_t y = 0; y < 35; ++y) {
-		for (uint8_t x = 0; x < 24; ++x) {
+	uint16_t memoffset = num * (height * width / 8);
+	for (uint8_t y = 0; y < height; ++y) {
+		for (uint8_t x = 0; x < width; ++x) {
 			if (x % 8 == 0) {
 				// load new byte
-				byte = pgm_read_byte(decimal_bitmap + bitmap_offset + x / 8 + y * 3);
+				byte = pgm_read_byte(bitmap + memoffset);
+				byte ^= invert;
+				++memoffset;
 			}
-				
-			screen_set_pixel(offset_x + x, offset_y + y, byte & (1 << (7 - x % 8)));
+			
+			screen_set_pixel(offset_x + x, offset_y + y, (byte & (1 << (7 - x % 8))));
 		}
 	}
 }
-
 

@@ -2,17 +2,26 @@ from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import matplotlib.pyplot as plt
 
+import argparse
 
-CHAR_WIDTH = 24
-CHAR_HEIGHT = 35
+parser = argparse.ArgumentParser(description="Generate byte arrays of font characters.")
+parser.add_argument("--width", type=int, help="character width")
+parser.add_argument("--height", type=int, help="character height")
+
+parser.add_argument("--offset-x", type=int, help="")
+parser.add_argument("--ofset-y", type=int, help="")
+parser.add_argument("--size", type=int, help="font size")
+parser.add_argument("chars", type=str, metavar="CHARS", nargs=1, help="characters to process")
+
+args = parser.parse_args()
 
 def draw_character(char):
-    pil_font = ImageFont.truetype("monaco.ttf", size=45, encoding="unic")
+    pil_font = ImageFont.truetype("monaco.ttf", size=args.size, encoding="unic")
 
-    canvas = Image.new("1", [CHAR_WIDTH, CHAR_HEIGHT])
+    canvas = Image.new("1", [args.width, args.height])
 
     draw = ImageDraw.Draw(canvas)
-    draw.text((-1, -10), char, font=pil_font, fill="#ffffff")
+    draw.text((0, -int(args.size / 5)), char, font=pil_font, spacing=0, fill="#ffffff")
 
     return np.asarray(canvas)
 
@@ -28,19 +37,21 @@ def array_to_hex(arr):
     return h
 
 
-result = "";
-for i in range(10):
-    result += "// %d\n" % i
-    mat = draw_character(str(i))
+result = ""
 
-    for y in range(CHAR_HEIGHT):
-        for x in range(CHAR_WIDTH // 8):
+print(args.chars)
+for c in args.chars[0]:
+    result += "// %s\n" % c
+    mat = draw_character(c)
+
+    for y in range(mat.shape[0]):
+        for x in range(mat.shape[1] // 8):
             result += array_to_hex(mat[y, x*8:(x+1)*8]) + ", "
 
         result += " // %s\n" % ("".join([ str(j*1) for j in mat[y] ]))
  
     # save image as preview
     plt.imshow(mat)
-    plt.savefig("test_%d.png" % i)
+    plt.savefig("preview_%s.png" % c)
 
 print(result)

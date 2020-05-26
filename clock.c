@@ -16,7 +16,7 @@ uint8_t get_hours() {
 	//                       [ 20 hours ]
 	// If Bit 6 is set the hour data is encoded in the 12 mode, which means
 	// that Bit 5 indicates AM (not set) or PM (set). In 24 hour mode
-	// (Bit 6 not set) Bit 5 śtands for 20 hours (if set).
+	// (Bit 6 not set) Bit 5 stands for 20 hours (if set).
 	uint8_t data;
 	i2c_readReg(CLOCK_ADDR, CLOCK_HOURS_REG, &data, 1);
 
@@ -26,6 +26,8 @@ uint8_t get_hours() {
 
 	if (data & 0x40) {
 		// 12 hour mode
+		hours = hours % 12;
+		// PM flag set
 		if (data & 0x20) hours += 12;
 	} else {
 		// 24 hour mode
@@ -36,14 +38,17 @@ uint8_t get_hours() {
 }
 
 void set_hours(uint8_t hours) {
-	uint8_t data = 0;
-	if (hours > 12) {
-		hours -= 12;
-		data = ((hours % 10) & 0x0F) | 0x60;
-	} else {
-		data = ((hours % 10) & 0x0F) | 0x40;
-	}
+	// 12 hour mode flag already set
+	uint8_t data = 0x40;
 
+	// set PM flag
+	if (hours >= 12) data |= 0x20;
+
+	// convert to 12 hour format (12 PM = 12:00, 12 AM = 0:00)
+	hours = hours % 12;
+	if (hours == 0) hours = 12;
+
+	data |= (hours % 10) & 0x0F;
 	if (hours >= 10) data |= 0x10;
 
 	i2c_writeReg(CLOCK_ADDR, CLOCK_HOURS_REG, &data, 1);
